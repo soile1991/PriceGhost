@@ -37,8 +37,10 @@ jobs:
           filters: |
             backend:
               - 'backend/**'
+              - '.github/workflows/docker-build.yml'
             frontend:
               - 'frontend/**'
+              - '.github/workflows/docker-build.yml'
 
   # Build each platform on its native runner to avoid QEMU emulation issues
   build-backend:
