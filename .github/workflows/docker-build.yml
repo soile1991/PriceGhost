@@ -85,12 +85,12 @@ jobs:
 
       - name: Build and push Backend image by digest
         id: build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./backend
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: ${{ github.event_name != 'pull_request' && 'type=image,push-by-digest=true,name-canonical=true,push=true' || 'type=cacheonly' }}
+          outputs: ${{ github.event_name != 'pull_request' && format('type=image,name={0},push-by-digest=true,name-canonical=true,push=true', env.BACKEND_IMAGE) || 'type=cacheonly' }}
           cache-from: type=gha,scope=${{ env.PLATFORM_PAIR }}-backend
           cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}-backend
 
@@ -198,12 +198,12 @@ jobs:
 
       - name: Build and push Frontend image by digest
         id: build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: ./frontend
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
-          outputs: ${{ github.event_name != 'pull_request' && 'type=image,push-by-digest=true,name-canonical=true,push=true' || 'type=cacheonly' }}
+          outputs: ${{ github.event_name != 'pull_request' && format('type=image,name={0},push-by-digest=true,name-canonical=true,push=true', env.FRONTEND_IMAGE) || 'type=cacheonly' }}
           cache-from: type=gha,scope=${{ env.PLATFORM_PAIR }}-frontend
           cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}-frontend
 
