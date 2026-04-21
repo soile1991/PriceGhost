@@ -21,12 +21,10 @@ FROM node:20-slim AS production
 WORKDIR /app
 
 # Install Chromium dependencies for Puppeteer
-# Note: libasound2t64 replaces libasound2 in Debian Bookworm (node:20-slim base);
-# libxss1 is not available in Bookworm and its functionality is in libx11-6.
 RUN apt-get update && apt-get install -y \
     chromium \
     fonts-liberation \
-    libasound2t64 \
+    libasound2 \
     libatk-bridge2.0-0 \
     libatk1.0-0 \
     libcups2 \
@@ -41,6 +39,7 @@ RUN apt-get update && apt-get install -y \
     libxdamage1 \
     libxfixes3 \
     libxrandr2 \
+    libxss1 \
     xdg-utils \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
