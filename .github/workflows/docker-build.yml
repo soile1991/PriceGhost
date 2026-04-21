@@ -20,32 +20,8 @@ env:
   FRONTEND_IMAGE: ghcr.io/${{ github.repository_owner }}/priceghost-frontend
 
 jobs:
-  # Detect which paths changed
-  changes:
-    runs-on: ubuntu-latest
-    outputs:
-      backend: ${{ steps.filter.outputs.backend }}
-      frontend: ${{ steps.filter.outputs.frontend }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check for changes
-        uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            backend:
-              - 'backend/**'
-              - '.github/workflows/docker-build.yml'
-            frontend:
-              - 'frontend/**'
-              - '.github/workflows/docker-build.yml'
-
   # Build each platform on its native runner to avoid QEMU emulation issues
   build-backend:
-    needs: changes
-    if: needs.changes.outputs.backend == 'true' || github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
       matrix:
@@ -111,8 +87,8 @@ jobs:
           retention-days: 1
 
   merge-backend:
-    needs: [changes, build-backend]
-    if: (needs.changes.outputs.backend == 'true' || github.event_name == 'workflow_dispatch') && github.event_name != 'pull_request'
+    needs: build-backend
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -157,8 +133,6 @@ jobs:
 
   # Build each platform on its native runner to avoid QEMU emulation issues
   build-frontend:
-    needs: changes
-    if: needs.changes.outputs.frontend == 'true' || github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
       matrix:
@@ -224,8 +198,8 @@ jobs:
           retention-days: 1
 
   merge-frontend:
-    needs: [changes, build-frontend]
-    if: (needs.changes.outputs.frontend == 'true' || github.event_name == 'workflow_dispatch') && github.event_name != 'pull_request'
+    needs: build-frontend
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
       contents: read
