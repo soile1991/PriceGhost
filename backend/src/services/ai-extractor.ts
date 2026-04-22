@@ -207,10 +207,10 @@ function prepareHtmlForAI(html: string): string {
 
   finalContent += `=== HTML Content ===\n${content}`;
 
-  // Truncate to ~25000 characters to stay within token limits but capture more content
-  if (finalContent.length > 25000) {
-    finalContent = finalContent.substring(0, 25000) + '\n... [truncated]';
-  }
+  // // Truncate to ~25000 characters to stay within token limits but capture more content
+  // if (finalContent.length > 25000) {
+  //   finalContent = finalContent.substring(0, 25000) + '\n... [truncated]';
+  // }
 
   console.log(`[AI] Prepared HTML content: ${finalContent.length} characters`);
   return finalContent;
